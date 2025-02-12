@@ -28,14 +28,14 @@ pipeline {
                 }
             }
         }
+    }
 
-        stage('Cleanup') {
-            steps {
-                script {
-                    bat 'docker stop flask-container || echo "Container not running"'
-                    bat 'docker rm flask-container || echo "Container not found"'
-                    bat 'docker rmi flask-app || echo "Image not found"'
-                }
+    post {
+        failure {
+            script {
+                bat 'docker stop flask-container || echo "Container not running"'
+                bat 'docker rm flask-container || echo "Container not found"'
+                bat 'docker rmi flask-app || echo "Image not found"'
             }
         }
     }
