@@ -16,7 +16,7 @@ pipeline {
         stage('Build Docker Image') {
             steps {
                 script {
-                    bat 'docker build -t $IMAGE_NAME .'
+                    bat 'docker build -t flask-app .'
                 }
             }
         }
@@ -24,7 +24,7 @@ pipeline {
         stage('Run Docker Container') {
             steps {
                 script {
-                    bat 'docker run -d -p 5000:5000 --name $CONTAINER_NAME $IMAGE_NAME'
+                    bat 'docker run -d -p 5000:5000 --name flask-container flask-app'
                 }
             }
         }
@@ -32,8 +32,9 @@ pipeline {
         stage('Cleanup') {
             steps {
                 script {
-                    bat 'docker rm -f $CONTAINER_NAME || true'
-                    bat 'docker rmi -f $IMAGE_NAME || true'
+                    bat 'docker stop flask-container || echo "Container not running"'
+                    bat 'docker rm flask-container || echo "Container not found"'
+                    bat 'docker rmi flask-app || echo "Image not found"'
                 }
             }
         }
